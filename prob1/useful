@@ -1,0 +1,15 @@
+mkdir
+rm -rf      remove também ficheiros dentro do dir
+cp          copy
+mv          mover ou rename
+ls -al      dá mais info
+man         info sobre comandos ou funções de c
+
+gcc         compilador c
+    -Wall   ter todos os warnings
+    -lm     adicionar biblioteca não padrão(neste caso matematica    m)
+    -g      modo debug
+
+gdb         há um guia
+
+maybe aprender vim(cheat sheet no pdf)
