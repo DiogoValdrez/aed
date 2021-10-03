@@ -42,6 +42,7 @@ void quick_find(int *id, int N, FILE * fp, int quietOut)
    int find_counter = 0;
    long long int union_counter = 0;
    int j, k, num;
+   int *used;
 
    /* initialize; all disconnected */
    for (i = 0; i < N; i++) {
@@ -80,11 +81,11 @@ void quick_find(int *id, int N, FILE * fp, int quietOut)
    printf("Find: %d || Union: %lld\n", find_counter, union_counter);
 
 
-   for(j = 0, num = 0;j < 10;j++){
+   for(j = 0, num = 0;j < N;j++){
       if(id[j] == j){
          printf("%d", j);
          num ++;
-         for(k = 0;k<10;k++){
+         for(k = 0;k<N;k++){
             if(k == j){
                continue;
             }else if(id[k] == j){
