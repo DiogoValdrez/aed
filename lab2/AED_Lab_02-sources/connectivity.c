@@ -39,6 +39,10 @@ void quick_find(int *id, int N, FILE * fp, int quietOut)
    int pairs_cnt = 0;            /* connection pairs counter */
    int links_cnt = 0;            /* number of links counter */
 
+   int find_counter = 0;
+   long long int union_counter = 0;
+   int j, k, num;
+
    /* initialize; all disconnected */
    for (i = 0; i < N; i++) {
       id[i] = i;
@@ -48,6 +52,8 @@ void quick_find(int *id, int N, FILE * fp, int quietOut)
    while (fscanf(fp, "%d %d", &p, &q) == 2) {
       pairs_cnt++;
       /* do search first */
+
+      find_counter += 2;//!if
       if (id[p] == id[q]) {
          /* already in the same set; discard */
 #if (DEBUG == 1)
@@ -57,9 +63,12 @@ void quick_find(int *id, int N, FILE * fp, int quietOut)
       }
 
       /* pair has new info; must perform union */
+      union_counter ++; //!for
       for (t = id[p], i = 0; i < N; i++) {
+         union_counter ++; //!if
          if (id[i] == t) {
             id[i] = id[q];
+            union_counter += 2;//!change value
          }
       }
       links_cnt++;
@@ -68,6 +77,24 @@ void quick_find(int *id, int N, FILE * fp, int quietOut)
    }
    printf("QF: The number of links performed is %d for %d input pairs.\n",
           links_cnt, pairs_cnt);
+   printf("Find: %d || Union: %lld\n", find_counter, union_counter);
+
+
+   for(j = 0, num = 0;j < 10;j++){
+      if(id[j] == j){
+         printf("%d", j);
+         num ++;
+         for(k = 0;k<10;k++){
+            if(k == j){
+               continue;
+            }else if(id[k] == j){
+               printf("-%d", k);
+            }
+         }
+         printf("\n");
+      }
+   }
+   printf("Número de conjuntos: %d", num);
    return;
 }
 
@@ -93,6 +120,9 @@ void quick_union(int *id, int N, FILE * fp, int quietOut)
    int pairs_cnt = 0;            /* connection pairs counter */
    int links_cnt = 0;            /* number of links counter */
 
+   int find_counter = 0;
+   int union_counter = 0;
+
    /* initialize; all disconnected */
    for (i = 0; i < N; i++) {
       id[i] = i;
@@ -105,10 +135,14 @@ void quick_union(int *id, int N, FILE * fp, int quietOut)
       j = q;
 
       /* do search first */
+      find_counter++;//!while
       while (i != id[i]) {
+         find_counter++;//!getvalue
          i = id[i];
       }
+      find_counter++;//!while
       while (j != id[j]) {
+         find_counter++;//!getvalue
          j = id[j];
       }
       if (i == j) {
@@ -120,6 +154,7 @@ void quick_union(int *id, int N, FILE * fp, int quietOut)
       }
 
       /* pair has new info; must perform union */
+      union_counter++;//!union
       id[i] = j;
       links_cnt++;
 
@@ -128,6 +163,8 @@ void quick_union(int *id, int N, FILE * fp, int quietOut)
    }
    printf("QU: The number of links performed is %d for %d input pairs.\n",
           links_cnt, pairs_cnt);
+   printf("Find: %d || Union: %d", find_counter, union_counter);
+   return;
 }
 
 
@@ -153,6 +190,9 @@ void weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
    int pairs_cnt = 0;            /* connection pairs counter */
    int links_cnt = 0;            /* number of links counter */
 
+   int find_counter = 0;
+   int union_counter = 0;
+
    /* initialize; all disconnected */
    for (i = 0; i < N; i++) {
       id[i] = i;
@@ -164,8 +204,10 @@ void weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
       pairs_cnt++;
 
       /* do search first */
-      for (i = p; i != id[i]; i = id[i]);
-      for (j = q; j != id[j]; j = id[j]);
+      for (i = p; i != id[i]; i = id[i]) find_counter+=2;//!find
+      find_counter++;//!falhou check
+      for (j = q; j != id[j]; j = id[j]) find_counter+=2;//!find
+      find_counter++;//!falhou check
 
       if (i == j) {
          /* already in the same set; discard */
@@ -176,13 +218,16 @@ void weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
       }
 
       /* pair has new info; must perform union; pick right direction */
+      union_counter+=2;//!if
       if (sz[i] < sz[j]) {
          id[i] = j;
          sz[j] += sz[i];
+         union_counter+=3;//!union
       }
       else {
          id[j] = i;
          sz[i] += sz[j];
+         union_counter+=3;//!union
       }
       links_cnt++;
 
@@ -191,6 +236,8 @@ void weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
    }
    printf("WQU: The number of links performed is %d for %d input pairs.\n",
           links_cnt, pairs_cnt);
+   printf("Find: %d || Union: %d", find_counter, union_counter);
+   return;
 }
 
 
@@ -215,6 +262,9 @@ void compressed_weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
    int pairs_cnt = 0;            /* connection pairs counter */
    int links_cnt = 0;            /* number of links counter */
 
+   int find_counter = 0;
+   int union_counter = 0;
+
    /* initialize; all disconnected */
    for (i = 0; i < N; i++) {
       id[i] = i;
@@ -226,8 +276,10 @@ void compressed_weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
       pairs_cnt++;
 
       /* do search first */
-      for (i = p; i != id[i]; i = id[i]);
-      for (j = q; j != id[j]; j = id[j]);
+      for (i = p; i != id[i]; i = id[i]) find_counter+=2;//!find
+      find_counter++;//!falhou check
+      for (j = q; j != id[j]; j = id[j]) find_counter+=2;//!find
+      find_counter++;//!falhou check
 
       if (i == j) {
          /* already in the same set; discard */
@@ -238,15 +290,18 @@ void compressed_weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
       }
 
       /* pair has new info; must perform union; pick right direction */
+      union_counter+=2;//!if
       if (sz[i] < sz[j]) {
          id[i] = j;
          sz[j] += sz[i];
          t = j;
+         union_counter+=3;//!union
       }
       else {
          id[j] = i;
          sz[i] += sz[j];
          t = i;
+         union_counter+=3;//!union
       }
       links_cnt++;
 
@@ -254,16 +309,20 @@ void compressed_weighted_quick_union(int *id, int N, FILE * fp, int quietOut)
       for (i = p; i != id[i]; i = x) {
          x = id[i];
          id[i] = t;
+         union_counter+=3;//!union
       }
+      union_counter++;//!falhou check
       for (j = q; j != id[j]; j = x) {
          x = id[j];
          id[j] = t;
+         union_counter+=3;//!union
       }
+      union_counter++;//!falhou check
       if (!quietOut)
          printf(" %d %d\n", p, q);
    }
    printf("CWQU: The number of links performed is %d for %d input pairs.\n",
           links_cnt, pairs_cnt);
-
+   printf("Find: %d || Union: %d", find_counter, union_counter);
    return;
 }
