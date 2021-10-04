@@ -121,8 +121,8 @@ void quick_union(int *id, int N, FILE * fp, int quietOut)
    int pairs_cnt = 0;            /* connection pairs counter */
    int links_cnt = 0;            /* number of links counter */
 
-   int find_counter = 0;
-   int union_counter = 0;
+   long long int find_counter = 0;
+   long long int union_counter = 0;
 
    /* initialize; all disconnected */
    for (i = 0; i < N; i++) {
@@ -138,12 +138,12 @@ void quick_union(int *id, int N, FILE * fp, int quietOut)
       /* do search first */
       find_counter++;//!while
       while (i != id[i]) {
-         find_counter++;//!getvalue
+         find_counter+=2;//!getvalue
          i = id[i];
       }
       find_counter++;//!while
       while (j != id[j]) {
-         find_counter++;//!getvalue
+         find_counter+=2;//!getvalue
          j = id[j];
       }
       if (i == j) {
@@ -164,7 +164,7 @@ void quick_union(int *id, int N, FILE * fp, int quietOut)
    }
    printf("QU: The number of links performed is %d for %d input pairs.\n",
           links_cnt, pairs_cnt);
-   printf("Find: %d || Union: %d", find_counter, union_counter);
+   printf("Find: %lld || Union: %lld", find_counter, union_counter);
    return;
 }
 
