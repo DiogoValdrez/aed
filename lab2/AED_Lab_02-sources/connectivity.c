@@ -81,11 +81,11 @@ void quick_find(int *id, int N, FILE * fp, int quietOut)
    printf("Find: %d || Union: %lld\n", find_counter, union_counter);
 
 
-   for(j = 0, num = 0;j < N;j++){
-      if(id[j] == j){
+   for(j = 0, num = 0;j < N;j++){//! N
+      if(id[j] == j){ 
          printf("%d", j);
          num ++;
-         for(k = 0;k<N;k++){
+         for(k = 0;k<N;k++){//! N
             if(k == j){
                continue;
             }else if(id[k] == j){
