@@ -22,7 +22,7 @@ typedef struct _st_texto {
   int  n_dist_palavras;		/* number of distinct words*/
   char **palavras;		/* Table of strings for words "palavras"*/
   int  *ocorrencias;		/* Table of integers for counting occurences
-                                   "ocorr�ncias" */
+                                   "ocorr�ncias" */
 } st_texto;
 
 
@@ -39,7 +39,8 @@ typedef struct _st_texto {
 
 char *LePalavra ( FILE * f )
 {
-  static char palavra[MAX_STR];
+  static char palavra[MAX_STR];//! static - esta memoria não é destruida ao sair da função, 
+                               //!ou seja, na vez seguinte que esta função for invocada esta tem o mesmo valor
   /* It is assumed that the words present in the text files do not exceed
      100 characters in length  */
   /* Note that the variable palavra is declared as "static". */
@@ -105,24 +106,24 @@ void AlocaTabelaPalavras ( char *ficheiro, st_texto *t)
   }
   fclose ( f );
   printf ( "Words count: %d\n", (*t).n_total_palavras );
-  (*t).palavras = /* -- Insert code for memory allocation --*/;
+  (*t).palavras = (char **)malloc(sizeof(char*)*t->n_total_palavras);
   if ( (*t).palavras == NULL ) {
     fprintf ( stderr, "ERROR: not enough memory available!\n" );
     exit ( 2 );
   }
-  (*t).ocorrencias = /* -- Insert code for memory allocation --*/;
+  (*t).ocorrencias = (int*)malloc(sizeof(int)*t->n_total_palavras);
   if ( (*t).ocorrencias == NULL ) {
     fprintf ( stderr, "ERROR: not enough memory available!\n" );
     exit ( 4 );
   }
   for ( i = 0; i < (*t).n_total_palavras; i++ )	{
-    (*t).palavras[i] = /* -- Insert code for memory allocation --*/;
+    (*t).palavras[i] = (char*)malloc(sizeof(char)*(n_max_caracteres+1));
     if ( (*t).palavras[i] == NULL ) {
       fprintf ( stderr, "ERROR: not enough memory available!\n" );
       exit ( 3 );
     }
-    (*t).palavras[i][0] = /* -- INSERT code to initialize table of strings  --*/ ;
-    (*t).ocorrencias[i] = /* -- INSERT code to initialize table  of counters --*/ ;
+    (*t).palavras[i][0] = '\0';
+    (*t).ocorrencias[i] = 0;
   }
 
   return;
@@ -208,7 +209,7 @@ void EscreveFicheiro ( char *ficheiro, st_texto *t )
   char *nome;
   int i = 0;
 
-  nome = /* -- Insert code for memory allocation,  remember to add space for the dot (.), the filename extension and the string termination --*/ ;
+  nome = (char*)malloc(sizeof(char)*(strlen(ficheiro)+strlen(".palavras")+1));//! strlen não retorna o \0
   if ( nome == NULL ) {
     fprintf ( stderr, "ERROr: not enough memory available!\n" );
     exit ( 5 );
