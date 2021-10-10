@@ -39,7 +39,7 @@ typedef struct _st_texto {
 
 char *LePalavra ( FILE *f )
 {
-  static char palavra[MAX_STR];       /* note static local buffer returned */
+  static char palavra[MAX_STR];       /* note static local buffer returned */ //!why static?
 
   if ( fscanf ( f, "%s", palavra ) ==1 )
     return (palavra);
@@ -102,24 +102,24 @@ void AlocaTabelaPalavras ( char *ficheiro, st_texto *t)
   fclose ( fp );
   printf ( "Words count: %d\n", (*t).n_total_palavras );
 
-  (*t).palavras =  /* -- INSERT code for memory allocation --*/;
+  (*t).palavras =  (char**)malloc(sizeof(char*)*t->n_total_palavras);
   if ( (*t).palavras == NULL ) {
     fprintf ( stderr, "ERROR: not enough memory available!\n" );
     exit ( 2 );
   }
-  (*t).ocorrencias = /* -- INSERT code for memory allocation --*/;
+  (*t).ocorrencias = (int*)malloc(sizeof(int)*t->n_total_palavras);
   if ( (*t).ocorrencias == NULL ) {
     fprintf ( stderr, "ERROR: not enough memory available!\n" );
     exit ( 4 );
   }
   for ( i = 0; i < (*t).n_total_palavras; i++ )   {
-    (*t).palavras[i] =  /* -- INSERT code for memory allocation --*/;
+    (*t).palavras[i] =  (char*)malloc(sizeof(char)*n_max_caracteres + 1);
     if ( (*t).palavras[i] == NULL ) {
       fprintf ( stderr, "ERROR: not enough memory available!\n" );
       exit ( 3 );
     }
-    (*t).palavras[i][0] = /* -- INSERT code to initialize table of strings  --*/ ;
-    (*t).ocorrencias[i] = /* -- INSERT code to initialize table  of counters --*/ ;
+    (*t).palavras[i][0] = '\0' ;
+    (*t).ocorrencias[i] = 0 ;
   }
   return;
 }
@@ -202,7 +202,7 @@ void EscreveFicheiro ( char *ficheiro, st_texto *t )
   char *nome;
   int i = 0;
 
-  nome =  /* -- INSERT code for memory allocation,  --*/ ;
+  nome =  (char*)malloc(sizeof(char)*(strlen(ficheiro)+strlen(".palavras"))+1) ;
   /* including dot (.) extension and string termination, see below */
   if ( nome == NULL ) {
     fprintf ( stderr, "ERROR: not enough memory available!\n" );
@@ -218,6 +218,12 @@ void EscreveFicheiro ( char *ficheiro, st_texto *t )
   fclose ( f );
 
   /* Anything else I should do here? */
+  for ( i = 0; i < (*t).n_total_palavras; i++ ){
+    free(t->palavras[i]);
+  }
+  free(t->palavras);
+  free(t->ocorrencias);
+  free(nome);
 
   return;
 }
