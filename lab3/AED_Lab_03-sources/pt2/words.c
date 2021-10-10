@@ -121,14 +121,14 @@ t_palavra  *criaPalavra(char *pal)
 {
   t_palavra *nova;
 
-  nova = /* INSERT CODE to ALLOCATE MEMORY */
-    if(nova == NULL)
+  nova = (t_palavra*)malloc(sizeof(t_palavra));
+  if(nova == NULL){
       erroMemoria("Reserve memory for new word in criaPalavra" );
-
-  nova -> pal = /* INSERT CODE to ALLOCATE MEMORY */
-    if(nova == NULL)
+  }
+  nova -> pal = (char*)malloc(sizeof(char)*(strlen(pal)+1));
+  if(nova == NULL){
       erroMemoria("Reserve of name in criaPalavra" );
-
+  }
   strcpy(nova -> pal,pal);
   nova -> ocorrencias = 1;
 
@@ -215,7 +215,7 @@ void escreveUmaPalavra(t_palavra *p, FILE *fp)
 
 void libertaPalavra(t_palavra *p)
 {
-  /* -- FREE MEMORY RESERVED FOR WORD -- */
-
+  free(p->pal);
+  free(p);
   return;
 }
