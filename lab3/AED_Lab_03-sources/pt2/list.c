@@ -98,8 +98,19 @@ Item getItemLista (t_lista *p)
  *****************************************************************************/
 
 t_lista *getProxElementoLista(t_lista *p) {
-
-  return p -> prox;
+  static t_lista *aux;
+  if(0){
+    if(p->prox == NULL){
+      aux->prox = NULL;//! esta aqui a dar erro a dizer que aux é null e que nao pode se aceder a aux->prox
+      return p;
+    }else{
+      aux = p;
+      return getProxElementoLista(p->prox);
+    }
+  }else if(1){
+    return p -> prox; //! se a opçaõ for uma coisa: recursiva com if que vai ate ao aux == NUll, pega no elemento anterior a esse(static) e retorna-o
+    //!o problema é que isto irá destruir a lista e não poderemos dar free dela, podemos dar logo free ou então adicionar um parametro a p
+  }
 }
 
 
