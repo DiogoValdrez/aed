@@ -12,7 +12,7 @@
 #----------------------------------------------------------------------
 
 CC=gcc
-CFLAGS=-g -Wall -ansi -pedantic
+CFLAGS=-g -Wall -ansi -pedantic -std=gnu99 -g
 
 newWords: main.o list.o words.o
 	$(CC) $(CFLAGS) -o newWords main.o list.o words.o

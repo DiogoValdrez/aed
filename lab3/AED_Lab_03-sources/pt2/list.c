@@ -17,6 +17,7 @@
 #include <strings.h>
 
 #include "list.h"
+#include "words.h"
 
 
 /* Linked list  */
@@ -97,20 +98,21 @@ Item getItemLista (t_lista *p)
  *
  *****************************************************************************/
 
-t_lista *getProxElementoLista(t_lista *p) {
-  static t_lista *aux;
-  if(0){
-    if(p->prox == NULL){
-      aux->prox = NULL;//! esta aqui a dar erro a dizer que aux é null e que nao pode se aceder a aux->prox
-      return p;
-    }else{
-      aux = p;
-      return getProxElementoLista(p->prox);
+t_lista *getProxElementoLista(t_lista *p, int mode, FILE *fp) {
+  if(!mode){
+    if(p->prox != NULL){
+      getProxElementoLista(p->prox, mode, fp);
     }
-  }else if(1){
+    escreveUmaPalavra((t_palavra*) getItemLista(p), fp);
+    libertaItem(p->this);
+    free(p);
+    return p;
+  }else if(mode){
     return p -> prox; //! se a opçaõ for uma coisa: recursiva com if que vai ate ao aux == NUll, pega no elemento anterior a esse(static) e retorna-o
     //!o problema é que isto irá destruir a lista e não poderemos dar free dela, podemos dar logo free ou então adicionar um parametro a p
   }
+  printf("ERROR");
+  exit(0);
 }
 
 

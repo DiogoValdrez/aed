@@ -55,15 +55,23 @@ int main(int argc, char *argv[])
   t_lista *lp, *aux;
   int numTotalPalavras = 0;
   int numPalavrasDiferentes;
+  int mode;
   char extOut[] = ".palavras";
   char *nomeFicheiroIn, *nomeFicheiroOut;
   char novaPal[DIM_MAX_PALAVRA];
   FILE *fpIn,*fpOut;
 
-  if(argc < 2)
+  if(argc < 3)
     Usage(argv[0]);
 
   nomeFicheiroIn = argv[1];
+  if(strcmp(argv[2], "INICIO")){
+    mode = 1;
+  }else if(strcmp(argv[2], "FIM")){
+    mode = 0;
+  }else{
+    Usage(argv[0]);
+  }
   nomeFicheiroOut = (char*)malloc(sizeof(char)*(strlen(nomeFicheiroIn)+strlen(".palavras")+1));
   if(nomeFicheiroOut == NULL){
       erroMemoria("Memory allocation for nomeFicheiroOut in main" );
@@ -91,25 +99,32 @@ int main(int argc, char *argv[])
     exit(3);
   }
   /* write out words to output file */
-  aux = lp;
-  while(aux != NULL) {
-    escreveUmaPalavra((t_palavra*) getItemLista(aux), fpOut);
-    aux = getProxElementoLista(aux);
-  }
-
   numPalavrasDiferentes = numItensNaLista(lp);
+  aux = lp; 
+  if(mode){
+    while(aux != NULL) {
+      escreveUmaPalavra((t_palavra*) getItemLista(aux), fpOut);//! modificar aqui para não começar no primeiro
+      aux = getProxElementoLista(aux, mode, fpOut);
+    }
+  }else if(!mode){
+    getProxElementoLista(lp, mode, fpOut);
+    //escreveUmaPalavra((t_palavra*) getItemLista(aux), fpOut);
+  }
+  
+
   printf("Number of words = %d, Number of different words = %d\n",
          numTotalPalavras, numPalavrasDiferentes);
 
   /* free allocated memory for list of words */
-  libertaLista(lp, libertaItem);
-
+  if(mode){
+    libertaLista(lp, libertaItem);//!if opção for normal
+  }
   /* -- CLOSE ALL OPEN FILES -- */
   fclose(fpIn);
   fclose(fpOut);
 
   /* -- FREE ANY OTHER MEMORY YOU HAVE ALLOCATED -- */ 
-  /*!falta este*/
+  //!falta este
   free(nomeFicheiroOut);
 
   exit(0);

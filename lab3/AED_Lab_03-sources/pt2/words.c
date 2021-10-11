@@ -50,13 +50,14 @@ t_lista  *testaPalavra(t_lista *lp, char *novaPal)
   int err;            /* error status, not checked */
 
   aux = lp;
+  int mode = 1;
   while (aux != NULL){
     pal = (t_palavra*) getItemLista(aux);
     if( strcasecmp(getPalavra(pal),novaPal) == 0) {
       incOcorr(pal);
       return lp;
     }
-    aux = getProxElementoLista(aux);
+    aux = getProxElementoLista(aux, mode, NULL);
   }
   /* Expect insertion at the begin of the list (not sorted!) */
 

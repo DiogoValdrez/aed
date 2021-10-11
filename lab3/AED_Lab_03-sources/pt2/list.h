@@ -27,7 +27,7 @@ typedef struct _t_lista t_lista;
 t_lista  *iniLista (void);
 t_lista  *criaNovoNoLista (t_lista *lp, Item this, int *err);
 Item      getItemLista (t_lista *p);
-t_lista  *getProxElementoLista(t_lista *p);
+t_lista  *getProxElementoLista(t_lista *p, int mode, FILE *fp);
 int       numItensNaLista (t_lista *lp);
 void 	  libertaLista(t_lista *lp, void freeItem(Item));
 
