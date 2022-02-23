@@ -44,23 +44,45 @@ int OP_CNT = 0;     /* global variable, to simplify complexity assessment */
  *           (*less)(Item,Item) - abstract type comparison function
  *****************************************************************************/
 
-void sort(Item a[], int l, int r, int (*less) (Item, Item))
+void sort(Item a[], int l, int r, int (*less) (Item, Item), int gbg)
 {
    int i, j;
-
-   /*==== TODO ====*/
-   /* use    OP_CNT */
-
-   for (i = l + 1; i <= r; i++) {
-      Item v = a[i];
-      j = i;
-      while (j > l && less(v, a[j - 1])) {
-         a[j] = a[j - 1];
-         j--;
+   Item v;
+   if(gbg){
+      for (i = l + 1; i <= r; i++) {
+         OP_CNT++;
+         v = a[i];
+         j = i;
+         OP_CNT++;
+         OP_CNT+=2;
+         while (j > l && less(v, a[j - 1])) {
+            OP_CNT+=2;
+            OP_CNT+=3;
+            a[j] = a[j - 1];
+            j--;
+         }
+         OP_CNT++;
+         a[j] = v;
       }
-      a[j] = v;
+      return;
+   }else{
+      for (i = l + 1; i <= r; i++) {
+         OP_CNT++;
+         v = a[i];
+         j = i;
+         OP_CNT++;
+         OP_CNT+=2;
+         while (j > l && less( a[j - 1], v)) {
+            OP_CNT+=2;
+            OP_CNT+=3;
+            a[j] = a[j - 1];
+            j--;
+         }
+         OP_CNT++;
+         a[j] = v;
+      }
+      return;
    }
-   return;
 }
 
 
@@ -108,27 +130,34 @@ int main(int argc, char **argv)
    /*  Call the sorting function using as argument the
        appropriate comparison function selected by user option */
 
-   if ((criterio == alphabetic) && (sentido == ascending)) {
-
-      /*==== TODO ====*/
-      sort((void**)tabword,0, numWords-1, &LessAlphabetic);
-      /* -- sort(....); -- */
-
+   if ((criterio == alphabetic)) {
+      if(sentido == ascending){
+         sort((void**)tabword,0, numWords-1, &LessAlphabetic, 1);
+      }else{
+         sort((void**)tabword,0, numWords-1, &LessAlphabetic, 0);
+      }
    }
-   /* other user options */
-   /*==== TODO ====*/
+   if ((criterio == occurrences)) {      
+      if(sentido == ascending){
+            sort((void**)tabword,0, numWords-1, &LessNumUses, 1);
+         }else{
+            sort((void**)tabword,0, numWords-1, &LessNumUses, 0);
+         }
+   }
+   if ((criterio == length) ) {
+      if(sentido == ascending){
+         sort((void**)tabword,0, numWords-1, &LessLength, 1);
+      }else{
+         sort((void**)tabword,0, numWords-1, &LessLength, 0);
+      }
+   }
 
-   /* ---------------------------------------- */
    printf("Accesses count for sort: %d\n", OP_CNT);
 
    WriteFile(tabword, file, numWords);
    /*  printf("Number of different words: %d\n", n_palavras);  */
 
-   /* -- Insert code to call functions to free allocated memory -- */
 
-   /*==== TODO ====*/
-
-   /* ------------------------------------------------------------ */
-
+   FreeWordArray(&tabword, numWords);
    return 0;
 }
